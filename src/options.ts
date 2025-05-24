@@ -70,7 +70,7 @@ export interface ModuleOptions {
   /**
    * Disable anything that is not related to the component meta parsing.
    */
-  onlyParseMeta?: boolean
+  onlyParseMetas?: boolean
 }
 
 export interface ModuleHooks {

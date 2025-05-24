@@ -105,7 +105,7 @@ export default defineNuxtModule<ModuleOptions>({
       }
     },
     globalsOnly: false,
-    onlyParseMeta: false
+    onlyParseMetas: false
   }),
   async setup (options, nuxt) {
     const resolver = createResolver(import.meta.url)
@@ -189,7 +189,7 @@ export default defineNuxtModule<ModuleOptions>({
       ])
     })
 
-    if (!options.onlyParseMeta) {
+    if (!options.onlyParseMetas) {
       // Add useComponentMeta
       addImportsDir(resolver.resolve('./runtime/composables'))
     }
@@ -238,7 +238,7 @@ export default defineNuxtModule<ModuleOptions>({
       nitroConfig.virtual['#nuxt-component-meta/nitro'] = () => readFileSync(join(nuxt.options.buildDir, '/component-meta.mjs'), 'utf-8')
     })
 
-    if (!options.onlyParseMeta) {
+    if (!options.onlyParseMetas) {
       addServerHandler({
         method: 'get',
         route: '/api/component-meta',
