@@ -71,6 +71,12 @@ export interface ModuleOptions {
    * Disable anything that is not related to the component meta parsing.
    */
   onlyParseMetas?: boolean
+  /**
+   * Whether to parse component meta at build time.
+   *
+   * If false, it will only parse at runtime.
+   */
+  parseAtBuild?: boolean
 }
 
 export interface ModuleHooks {

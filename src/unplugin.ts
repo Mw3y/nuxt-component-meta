@@ -2,10 +2,10 @@ import { createUnplugin } from 'unplugin'
 import { type ComponentMetaParser, useComponentMetaParser, type ComponentMetaParserOptions } from './parser'
 import type { Nuxt } from 'nuxt/schema'
 
-type ComponentMetaUnpluginOptions = { nuxt: Nuxt, parser?: ComponentMetaParser, parserOptions: ComponentMetaParserOptions }
+type ComponentMetaUnpluginOptions = { nuxt: Nuxt, parser?: ComponentMetaParser, parserOptions: ComponentMetaParserOptions, parseAtBuild?: boolean }
 
 // @ts-ignore -- arguments types are not correct
-export const metaPlugin = createUnplugin<ComponentMetaUnpluginOptions>(({ nuxt, parser, parserOptions }) => {
+export const metaPlugin = createUnplugin<ComponentMetaUnpluginOptions>(({ nuxt, parser, parserOptions, parseAtBuild }) => {
     const instance = parser || useComponentMetaParser(parserOptions)
     let _configResolved: any
 
@@ -14,7 +14,7 @@ export const metaPlugin = createUnplugin<ComponentMetaUnpluginOptions>(({ nuxt, 
       enforce: 'post',
       buildStart () {
         // avoid parsing meta twice in SSR
-        if (_configResolved?.build.ssr) {
+        if (_configResolved?.build.ssr || parseAtBuild) {
           return
         }
 

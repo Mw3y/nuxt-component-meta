@@ -105,14 +105,14 @@ export default defineNuxtModule<ModuleOptions>({
       }
     },
     globalsOnly: false,
-    onlyParseMetas: false
+    onlyParseMetas: false,
+    parseAtBuild: false
   }),
   async setup (options, nuxt) {
     const resolver = createResolver(import.meta.url)
 
     const isComponentIncluded = (component: any) => {
       if (!options?.globalsOnly) { return true }
-      
       if (component.global) { return true }
 
       return (options.include || []).find((excludeRule) => {
@@ -187,6 +187,13 @@ export default defineNuxtModule<ModuleOptions>({
         parser.init(),
         parser.stubOutput(),
       ])
+
+      if (options.parseAtBuild) {
+        // Parse components now so other modules can access metadata during setup
+        parser.fetchComponents()
+        nuxt.callHook('component-meta:parsed', parser.components)
+        parser.updateOutput()
+      }
     })
 
     if (!options.onlyParseMetas) {
@@ -217,7 +224,7 @@ export default defineNuxtModule<ModuleOptions>({
     // Vite plugin
     nuxt.hook('vite:extend', (vite: any) => {
       vite.config.plugins = vite.config.plugins || []
-      vite.config.plugins.push(metaPlugin.vite({ nuxt, parser, parserOptions }))
+      vite.config.plugins.push(metaPlugin.vite({ nuxt, parser, parserOptions, parseAtBuild: options.parseAtBuild }))
     })
 
     // Inject output alias
